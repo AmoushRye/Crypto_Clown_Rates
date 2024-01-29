@@ -1,8 +1,31 @@
-import React from 'react'
-import {Axios} from "axios"
+import React, { useEffect, useState } from 'react'
+import axios from 'axios'
+import { server } from '../index'
+import { Container, HStack } from '@chakra-ui/react'
+import Loader from "./Loader"
 const Exchanges = () => {
+  const [exchanges, setExchanges] = useState([])
+  const [loading, setLoading] = useState(true)
+  useEffect(() => {
+    const fetchExchanges = async () => {
+      const { data } = await axios.get(`${server}/exchanges?`)
+      setExchanges(data)
+      setLoading(false)
+    }
+    fetchExchanges();
+  }, [])
   return (
-    <div>Exchanges</div>
+    <Container maxW={"container.xl"}>{loading ?( <Loader />) :( <>
+      <HStack>
+        {
+          exchanges.map((i)=>{
+              return <div key={i.id}>{i.name}</div>;
+          })          
+        }
+      </HStack>
+    </>
+     )}
+    </Container>
   )
 }
 
