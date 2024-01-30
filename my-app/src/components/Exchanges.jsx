@@ -3,18 +3,28 @@ import axios from 'axios'
 import { server } from '../index'
 import { Container, HStack, VStack, Image, Heading, Text } from '@chakra-ui/react'
 import Loader from "./Loader"
+import ErrorComponent from './ErrorComponent'
 const Exchanges = () => {
   const [exchanges, setExchanges] = useState([])
   const [loading, setLoading] = useState(true)
+  const [error, setError] = useState(false);
   useEffect(() => {
     const fetchExchanges = async () => {
-      const { data } = await axios.get(`${server}/exchanges?`)
-      console.log(data)
-      setExchanges(data)
-      setLoading(false)
+      try {
+        const { data } = await axios.get(`${server}/exchanges?`)
+        setExchanges(data)
+        setLoading(false)
+      } catch (error) {
+        setError(true)
+        setLoading(false);
+      }
+
     }
     fetchExchanges();
   }, [])
+  if(error){
+    return <ErrorComponent message = {"Error while Fetching Exchanges"}/>
+  }
   return (
     <Container maxW={"container.xl"}>
       {loading ? (<Loader />) : (<>
@@ -30,7 +40,6 @@ const Exchanges = () => {
     </Container>
   )
 }
-
 const ExchangeCard = ({ name, img, rank, url }) =>
   <a href={url} target={"blank"}>
     <VStack w={"52"} shadow={"lg"} p="8" borderRadius={"lg"} transition={"all 0.3s"} m={"4"}
