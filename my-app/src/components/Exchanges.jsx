@@ -18,7 +18,6 @@ const Exchanges = () => {
         setError(true)
         setLoading(false);
       }
-
     }
     fetchExchanges();
   }, [])
