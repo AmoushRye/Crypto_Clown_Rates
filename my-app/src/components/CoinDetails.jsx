@@ -4,6 +4,7 @@ import Loader from './Loader'
 import { useParams } from 'react-router-dom'
 import axios from 'axios'
 import { server } from '../index'
+import ErrorComponent from './ErrorComponent'
 
 const CoinDetails = () => {
   const [coins, setCoins] = useState([])
@@ -25,6 +26,9 @@ const CoinDetails = () => {
     }
     fetchCoins();
   }, [params.id])
+  if (error) {
+    return <ErrorComponent message={"Error while Fetching Coin"} />
+  }
   return (
     <Container maxW={"container.xl"}>
       {loading?<Loader/>:(
