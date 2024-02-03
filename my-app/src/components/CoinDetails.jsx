@@ -5,7 +5,7 @@ import { useParams } from 'react-router-dom'
 import axios from 'axios'
 import { server } from '../index'
 import ErrorComponent from './ErrorComponent'
-
+import Chart from './Chart'
 const CoinDetails = () => {
   const [coin, setCoins] = useState([])
   const [loading, setLoading] = useState(true)
@@ -35,7 +35,7 @@ const CoinDetails = () => {
     <Container maxW={"container.xl"}>
       {loading ? <Loader /> : (
         <>
-          <Box width={"full"} borderWidth={1}>okk</Box>
+          <Box width={"full"} borderWidth={1}><Chart currency={currencySymbol}/></Box>
           {/* Button */}
           <RadioGroup value={currency} onChange={setCurrency} p={"8"}>
             <HStack spacing={"4"}>
