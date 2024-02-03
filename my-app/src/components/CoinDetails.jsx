@@ -71,6 +71,10 @@ const CoinDetails = () => {
                 title={"Circulating Supply"}
                 value={coin.market_data.circulating_supply}
               />
+              <Item title={"Market Cap"} value={`${currencySymbol}${coin.market_data.market_cap[currency]}`}/>
+              <Item title={"All time Low"} value={`${currencySymbol}${coin.market_data.atl[currency]}`}/>
+              <Item title={"All time High"} value={`${currencySymbol}${coin.market_data.ath[currency]}`}/>
+
               </Box>
 
 
