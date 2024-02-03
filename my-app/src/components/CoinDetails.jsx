@@ -1,4 +1,4 @@
-import { Container,Box, RadioGroup, Radio, HStack, VStack,Text } from '@chakra-ui/react'
+import { Container,Box, RadioGroup, Radio, HStack, VStack,Text ,Image, Stat, StatLabel, StatHelpText, StatArrow} from '@chakra-ui/react'
 import React, { useState,useEffect } from 'react'
 import Loader from './Loader'
 import { useParams } from 'react-router-dom'
@@ -7,10 +7,12 @@ import { server } from '../index'
 import ErrorComponent from './ErrorComponent'
 
 const CoinDetails = () => {
-  const [coins, setCoins] = useState([])
+  const [coin, setCoins] = useState([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState(false);
   const [currency, setCurrency] = useState("inr");
+  const currencySymbol = currency === "inr" ? "₹" : currency === "eur" ? "€" : "$"
+
   const params = useParams();
   useEffect(() => {
     const fetchCoins = async () => {
@@ -44,8 +46,17 @@ const CoinDetails = () => {
         </RadioGroup>
         <VStack spacing={"4"} p={"16"} alignItems={"flex-start"}>
           <Text fontSize={"small"} alignSelf={"center"} opacity={0.7}>
-            Last Updated on {Date().split("G")[0]}
+            Last Updated on {Date(coin.market_data.last_updated).split("G")[0]}
           </Text>
+          <Image src={coin.image.large} w={"16"} h={"16"} objectFit={"contain"}/>
+          <Stat>
+            <StatLabel>{coin.name}</StatLabel>
+            <StatLabel>{currencySymbol}{coin.market_data.current_price[currency]}</StatLabel>
+            <StatHelpText>
+              <StatArrow type={coin.market_data.price_change_percentage_24h>0?"increase":"decrease"}/>
+              {coin.market_data.price_change_percentage_24h}%
+            </StatHelpText>
+          </Stat>
         </VStack>
         </>
       )}
