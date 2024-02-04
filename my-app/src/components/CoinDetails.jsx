@@ -1,4 +1,4 @@
-import { Container, Box, RadioGroup, Radio, HStack, VStack, Text, Image, Stat, StatLabel, StatHelpText, StatArrow, Badge, Progress } from '@chakra-ui/react'
+import { Container, Box, RadioGroup, Radio, HStack, VStack, Text, Image, Stat, StatLabel, StatHelpText, StatArrow, Badge, Progress,Button } from '@chakra-ui/react'
 import React, { useState, useEffect } from 'react'
 import Loader from './Loader'
 import { useParams } from 'react-router-dom'
@@ -7,19 +7,32 @@ import { server } from '../index'
 import ErrorComponent from './ErrorComponent'
 import Chart from './Chart'
 const CoinDetails = () => {
-  const [coin, setCoins] = useState([])
+  const params = useParams();
+  const [coin, setCoin] = useState([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState(false);
   const [currency, setCurrency] = useState("inr");
+  const [days,setDays] = useState("24h");
+  const [chartArray,setChartArray] = useState([]);
   const currencySymbol = currency === "inr" ? "₹" : currency === "eur" ? "€" : "$"
-
-  const params = useParams();
+  const btns = ["24h","7d","14d","30d","60d","200d","1y","max"];
+  const switchChartStats = (val)=>{
+    switch(key){
+      case "24h":
+        setDays("24h")
+        setLoading(true)
+        break;
+      default:
+        break;
+    }
+  }
   useEffect(() => {
     const fetchCoins = async () => {
       try {
         const { data } = await axios.get(`${server}/coins/${params.id}`)
-        console.log(data)
-        setCoins(data)
+        const {data:chartData} = await axios.get(`${server}/coins/${params.id}/market_chart?vs_currency=${currency}&days=${days}`);
+        setCoin(data)
+        setChartArray(chartData.prices)
         setLoading(false)
       } catch (error) {
         setError(true)
@@ -27,7 +40,7 @@ const CoinDetails = () => {
       }
     }
     fetchCoins();
-  }, [params.id])
+  }, [params.id,currency,days])
   if (error) {
     return <ErrorComponent message={"Error while Fetching Coin"} />
   }
@@ -35,8 +48,14 @@ const CoinDetails = () => {
     <Container maxW={"container.xl"}>
       {loading ? <Loader /> : (
         <>
-          <Box width={"full"} borderWidth={1}><Chart currency={currencySymbol}/></Box>
-          {/* Button */}
+          <Box width={"full"} borderWidth={1}><Chart arr={chartArray} currency={currencySymbol} days={days}/></Box>
+          <HStack p={"4"} wrap={"wrap"}>
+            {
+              btns.map((i)=>(
+                <Button key = {i} onClick={()=>switchChartStats(i)}>{i}</Button>
+              ))
+            }
+          </HStack>
           <RadioGroup value={currency} onChange={setCurrency} p={"8"}>
             <HStack spacing={"4"}>
               <Radio value={"inr"}>INR</Radio>
