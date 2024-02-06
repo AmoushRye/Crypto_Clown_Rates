@@ -35,9 +35,7 @@ const CoinDetails = () => {
 
   const currencySymbol =
     currency === "inr" ? "₹" : currency === "eur" ? "€" : "$";
-
   const btns = ["24h", "7d", "14d", "30d", "60d", "200d", "1y", "max"];
-
   const switchChartStats = (key) => {
     switch (key) {
       case "24h":
@@ -79,7 +77,6 @@ const CoinDetails = () => {
         break;
     }
   };
-
   useEffect(() => {
     const fetchCoin = async () => {
       try {
@@ -98,9 +95,7 @@ const CoinDetails = () => {
     };
     fetchCoin();
   }, [params.id, currency, days]);
-
   if (error) return <ErrorComponent message={"Error While Fetching Coin"} />;
-
   return (
     <Container maxW={"container.xl"}>
       {loading ? (
@@ -110,7 +105,6 @@ const CoinDetails = () => {
           <Box width={"full"} borderWidth={1}>
             <Chart arr={chartArray} currency={currencySymbol} days={days} />
           </Box>
-
           <HStack p="4" overflowX={"auto"}>
             {btns.map((i) => (
               <Button
@@ -122,7 +116,6 @@ const CoinDetails = () => {
               </Button>
             ))}
           </HStack>
-
           <RadioGroup value={currency} onChange={setCurrency} p={"8"}>
             <HStack spacing={"4"}>
               <Radio value={"inr"}>INR</Radio>
@@ -130,20 +123,17 @@ const CoinDetails = () => {
               <Radio value={"eur"}>EUR</Radio>
             </HStack>
           </RadioGroup>
-
           <VStack spacing={"4"} p="16" alignItems={"flex-start"}>
             <Text fontSize={"small"} alignSelf="center" opacity={0.7}>
               Last Updated On{" "}
               {Date(coin.market_data.last_updated).split("G")[0]}
             </Text>
-
             <Image
               src={coin.image.large}
               w={"16"}
               h={"16"}
               objectFit={"contain"}
             />
-
             <Stat>
               <StatLabel>{coin.name}</StatLabel>
               <StatNumber>
